@@ -28,14 +28,32 @@ class App extends Component{
     });
   }
 
+  getUserRepos(){
+    $.ajax({
+      url: 'https://api.github.com/users/'+this.state.username+'/repos?per_page='+this.state.PerPage+'&client_id='+this.props.clientId+'&client_secret='+this.props.clientSecret+'&sort=created',
+      dataType: 'json',
+      cache: false,
+      success: function(data){
+        this.setState({userRepo: data});
+        console.log(data);
+      }.bind(this),
+      error: function(xhr, status, err){
+        this.setState({username: null});
+        alert(err);
+      }.bind(this)
+    });
+  }
+
+
   componentDidMount(){
     this.getUserData();
+    this.getUserRepos();
   }
 
   render(){
     return(
       <div>
-        <Profile userData= {this.state.userData}/>
+        <Profile{...this.state} />
       </div>
     )
   }
